@@ -53,7 +53,7 @@
 
 | Login Page | Dashboard |
 |-----------|-----------|
-| Claude-style animated logo, smooth post-login animation | Books, members, and transactions in one view |
+|  Animated logo, smooth post-login animation | Books, members, and transactions in one view |
 
 ---
 
