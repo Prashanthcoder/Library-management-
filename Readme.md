@@ -156,33 +156,33 @@ library-management-system/
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
-| `POST` | `/auth/signup` | Register a new librarian account | 
-| `POST` | `/auth/login` | Login and receive JWT token | 
-| `GET` | `/auth/me` | Get current logged-in user | 
+| `POST` | `/auth/signup` | Register a new librarian account | no |
+| `POST` | `/auth/login` | Login and receive JWT token | no |
+| `GET` | `/auth/me` | Get current logged-in user | yes | 
 
 ### Books
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
-| `POST` | `/books/` | Add a new book to catalog | 
-| `GET` | `/books/` | List all books | 
-| `PUT` | `/books/{id}` | Update book details | 
-| `DELETE` | `/books/{id}` | Delete a book (blocks if issued) | 
+| `POST` | `/books/` | Add a new book to catalog | yes |
+| `GET` | `/books/` | List all books | yes |
+| `PUT` | `/books/{id}` | Update book details | yes |
+| `DELETE` | `/books/{id}` | Delete a book (blocks if issued) | yes |
 
 ### Members
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
-| `POST` | `/members/` | Register a new member | 
-| `GET` | `/members/` | List all members | 
+| `POST` | `/members/` | Register a new member | yes |
+| `GET` | `/members/` | List all members | yes |
 
 ### Transactions
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
-| `POST` | `/transactions/issue` | Issue a book to a member |
-| `PUT` | `/transactions/return/{id}` | Return a book |
-| `GET` | `/transactions/` | List all currently issued books  |
+| `POST` | `/transactions/issue` | Issue a book to a member | yes |
+| `PUT` | `/transactions/return/{id}` | Return a book | yes |
+| `GET` | `/transactions/` | List all currently issued books  | yes |
 
 ---
 
