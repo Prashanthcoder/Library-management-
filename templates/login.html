@@ -1,18 +1,4 @@
 <!DOCTYPE html>
-<!--
-  templates/login.html
-  --------------------
-  LOGIN PAGE  (NEW FILE)
-
-  PASTE LOCATION: library_system/templates/login.html  (create this new file)
-
-  What this page does:
-    1. Shows a username + password form
-    2. POSTs to /auth/login
-    3. Saves the returned JWT in localStorage as "lms_token"
-    4. Redirects to / (dashboard)
-    5. If already logged in, redirects straight to dashboard
--->
 <html lang="en">
 
 <head>
@@ -25,58 +11,77 @@
 
 <body class="auth-body">
 
-    <div class="auth-card">
+    <!-- ── Success overlay (hidden until login succeeds) ── -->
+    <div id="success-overlay">
+        <div id="success-box">
+            <div id="success-ring"></div>
+            <svg id="check-svg" viewBox="0 0 52 52">
+                <circle class="check-circle" cx="26" cy="26" r="24" fill="none" />
+                <path class="check-tick" fill="none" d="M14 27 l8 8 l16-16" />
+            </svg>
+            <p id="success-label">Welcome back!</p>
+            <p id="success-sub">Taking you to the dashboard…</p>
+        </div>
+    </div>
+
+    <div class="auth-card" id="auth-card">
         <div class="auth-logo"></div>
         <h1 class="auth-title">Welcome back</h1>
         <p class="auth-sub">Sign in to the Library Management System</p>
 
-        <!-- Error / success banner -->
         <div id="alert" class="auth-alert hidden"></div>
 
         <form id="login-form" class="auth-form" novalidate>
-
             <div class="form-group">
                 <label for="username">Username</label>
                 <input id="username" name="username" type="text" placeholder="your username" autocomplete="username"
                     required />
             </div>
-
             <div class="form-group">
                 <label for="password">Password</label>
                 <div class="input-wrap">
                     <input id="password" name="password" type="password" placeholder="••••••••"
                         autocomplete="current-password" required />
-                    <button type="button" class="eye-btn" onclick="togglePassword('password', this)">👁</button>
+                    <button type="button" class="eye-btn" onclick="togglePassword('password',this)">👁</button>
                 </div>
             </div>
-
-            <button type="submit" class="btn btn-primary btn-full" id="submit-btn">
-                Sign In
-            </button>
-
+            <button type="submit" class="btn btn-primary btn-full" id="submit-btn">Sign In</button>
         </form>
 
-        <p class="auth-footer">
-            Don't have an account? <a href="/signup">Create one</a>
-        </p>
+        <p class="auth-footer">Don't have an account? <a href="/signup">Create one</a></p>
     </div>
 
     <script>
-        // If already logged in, skip the login page
-        if (localStorage.getItem("lms_token")) {
-            window.location.href = "/";
+        if (localStorage.getItem("lms_token")) window.location.href = "/";
+
+        function togglePassword(id, btn) {
+            const el = document.getElementById(id);
+            el.type = el.type === "password" ? "text" : "password";
+            btn.textContent = el.type === "password" ? "👁" : "🙈";
         }
 
-        function togglePassword(inputId, btn) {
-            const input = document.getElementById(inputId);
-            input.type = input.type === "password" ? "text" : "password";
-            btn.textContent = input.type === "password" ? "👁" : "🙈";
-        }
-
-        function showAlert(message, type = "error") {
+        function showAlert(msg, type = "error") {
             const el = document.getElementById("alert");
-            el.textContent = message;
+            el.textContent = msg;
             el.className = `auth-alert auth-alert-${type}`;
+        }
+
+        function playSuccessAnimation(username) {
+            // 1. Shrink + fade the login card
+            const card = document.getElementById("auth-card");
+            card.style.transition = "transform .4s ease, opacity .4s ease";
+            card.style.transform = "scale(0.92)";
+            card.style.opacity = "0";
+
+            // 2. Personalise the greeting
+            document.getElementById("success-label").textContent = `Welcome, ${username}!`;
+
+            // 3. Show the overlay
+            const overlay = document.getElementById("success-overlay");
+            overlay.classList.add("visible");
+
+            // 4. Redirect after the animation finishes (1.8 s)
+            setTimeout(() => { window.location.href = "/"; }, 2000);
         }
 
         document.getElementById("login-form").addEventListener("submit", async (e) => {
@@ -105,9 +110,9 @@
                     return;
                 }
 
-                // Save token and go to dashboard
                 localStorage.setItem("lms_token", data.access_token);
-                window.location.href = "/";
+                // 🎉 Play animation THEN redirect
+                playSuccessAnimation(payload.username);
 
             } catch (err) {
                 showAlert("Network error. Is the server running?");

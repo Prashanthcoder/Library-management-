@@ -1,17 +1,7 @@
 <!DOCTYPE html>
 <!--
   templates/signup.html
-  ---------------------
-  SIGNUP PAGE  (NEW FILE)
-
-  PASTE LOCATION: library_system/templates/signup.html  (create this new file)
-
-  What this page does:
-    1. Shows username + email + password + confirm-password form
-    2. Validates passwords match before sending
-    3. POSTs to /auth/signup
-    4. Saves returned JWT in localStorage as "lms_token"
-    5. Redirects to dashboard
+  PASTE LOCATION: library_system/templates/signup.html  (replace whole file)
 -->
 <html lang="en">
 
@@ -26,7 +16,7 @@
 <body class="auth-body">
 
     <div class="auth-card">
-        <div class="auth-logo">📚</div>
+        <div class="auth-logo"></div>
         <h1 class="auth-title">Create account</h1>
         <p class="auth-sub">Set up your librarian account</p>
 
@@ -35,9 +25,9 @@
         <form id="signup-form" class="auth-form" novalidate>
 
             <div class="form-group">
-                <label for="username">Username</label>
+                <label for="username">Username <span class="field-hint">(3–50 chars)</span></label>
                 <input id="username" name="username" type="text" placeholder="e.g. librarian01" autocomplete="username"
-                    required />
+                    minlength="3" maxlength="50" required />
             </div>
 
             <div class="form-group">
@@ -47,19 +37,23 @@
             </div>
 
             <div class="form-group">
-                <label for="password">Password</label>
+                <label for="password">
+                    Password <span class="field-hint">(6–64 chars)</span>
+                </label>
                 <div class="input-wrap">
                     <input id="password" name="password" type="password" placeholder="min 6 characters"
-                        autocomplete="new-password" required />
+                        autocomplete="new-password" minlength="6" maxlength="64" required />
                     <button type="button" class="eye-btn" onclick="togglePassword('password', this)">👁</button>
                 </div>
+                <!-- Live character counter -->
+                <span id="pwd-counter" class="field-hint">0 / 64</span>
             </div>
 
             <div class="form-group">
                 <label for="confirm">Confirm Password</label>
                 <div class="input-wrap">
                     <input id="confirm" name="confirm" type="password" placeholder="repeat password"
-                        autocomplete="new-password" required />
+                        autocomplete="new-password" maxlength="64" required />
                     <button type="button" class="eye-btn" onclick="togglePassword('confirm', this)">👁</button>
                 </div>
             </div>
@@ -79,6 +73,14 @@
         if (localStorage.getItem("lms_token")) {
             window.location.href = "/";
         }
+
+        // Live password character counter
+        document.getElementById("password").addEventListener("input", function () {
+            const counter = document.getElementById("pwd-counter");
+            const len = this.value.length;
+            counter.textContent = `${len} / 64`;
+            counter.style.color = len > 60 ? "#dc2626" : "#64748b";
+        });
 
         function togglePassword(inputId, btn) {
             const input = document.getElementById(inputId);
@@ -101,13 +103,11 @@
             const password = document.getElementById("password").value;
             const confirm = document.getElementById("confirm").value;
 
-            // Client-side validation
-            if (password.length < 6) {
-                return showAlert("Password must be at least 6 characters.");
-            }
-            if (password !== confirm) {
-                return showAlert("Passwords do not match.");
-            }
+            // Client-side validation (mirrors server-side rules)
+            if (username.length < 3) return showAlert("Username must be at least 3 characters.");
+            if (password.length < 6) return showAlert("Password must be at least 6 characters.");
+            if (password.length > 64) return showAlert("Password must be 64 characters or fewer.");
+            if (password !== confirm) return showAlert("Passwords do not match.");
 
             btn.disabled = true;
             btn.textContent = "Creating account…";
@@ -121,7 +121,15 @@
                 const data = await res.json();
 
                 if (!res.ok) {
-                    showAlert(data.detail || "Signup failed. Please try again.");
+                    // Server returns Pydantic validation errors as an array or a string
+                    let msg = "Signup failed.";
+                    if (typeof data.detail === "string") {
+                        msg = data.detail;
+                    } else if (Array.isArray(data.detail)) {
+                        // Pydantic v2 validation error format
+                        msg = data.detail.map(e => e.msg.replace("Value error, ", "")).join(" ");
+                    }
+                    showAlert(msg);
                     btn.disabled = false;
                     btn.textContent = "Create Account";
                     return;

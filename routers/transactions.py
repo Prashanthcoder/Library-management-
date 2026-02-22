@@ -1,10 +1,9 @@
 """
 routers/transactions.py
 -----------------------
-All endpoints related to book transactions:
-  POST  /transactions/issue/{id}   - Issue a book to a member
-  PUT   /transactions/return/{id}  - Return a book
-  GET   /transactions/             - List all active (unreturned) transactions
+TRANSACTION ENDPOINTS (protected)
+
+PASTE LOCATION: library_system/routers/transactions.py  (replace the whole file)
 """
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -13,43 +12,36 @@ from typing import List
 import datetime
 
 from database import get_db
+from auth import get_current_user
 import models
 import schemas
 
 router = APIRouter(prefix="/transactions", tags=["Transactions"])
 
 
-@router.post("/issue", response_model=schemas.TransactionResponse, status_code=status.HTTP_201_CREATED)
-def issue_book(payload: schemas.IssueBookRequest, db: Session = Depends(get_db)):
-    """
-    Issue a book to a member.
-    - Checks the book exists and has copies available (quantity > 0)
-    - Decrements the book's quantity by 1
-    - Records the transaction with today's date
-    """
-    # Validate book exists
+@router.post("/issue", response_model=schemas.TransactionResponse, status_code=201)
+def issue_book(
+    payload: schemas.IssueBookRequest,
+    db: Session = Depends(get_db),
+    _user=Depends(get_current_user)
+):
+    """Issue a book to a member. Requires login."""
     book = db.query(models.Book).filter(
         models.Book.id == payload.book_id).first()
     if not book:
         raise HTTPException(status_code=404, detail="Book not found")
 
-    # Check copies are available
     if book.quantity <= 0:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="No copies of this book are currently available"
-        )
+            status_code=400, detail="No copies currently available")
 
-    # Validate member exists
     member = db.query(models.Member).filter(
         models.Member.id == payload.member_id).first()
     if not member:
         raise HTTPException(status_code=404, detail="Member not found")
 
-    # Decrement available quantity
     book.quantity -= 1
 
-    # Create transaction record
     transaction = models.Transaction(
         book_id=payload.book_id,
         member_id=payload.member_id,
@@ -59,7 +51,6 @@ def issue_book(payload: schemas.IssueBookRequest, db: Session = Depends(get_db))
     db.commit()
     db.refresh(transaction)
 
-    # Build enriched response with book and member names
     return schemas.TransactionResponse(
         id=transaction.id,
         book_id=transaction.book_id,
@@ -72,12 +63,12 @@ def issue_book(payload: schemas.IssueBookRequest, db: Session = Depends(get_db))
 
 
 @router.put("/return/{transaction_id}", response_model=schemas.TransactionResponse)
-def return_book(transaction_id: int, db: Session = Depends(get_db)):
-    """
-    Return a book.
-    - Marks return_date as today
-    - Increments the book's quantity by 1
-    """
+def return_book(
+    transaction_id: int,
+    db: Session = Depends(get_db),
+    _user=Depends(get_current_user)
+):
+    """Return a book. Requires login."""
     transaction = db.query(models.Transaction).filter(
         models.Transaction.id == transaction_id
     ).first()
@@ -86,15 +77,10 @@ def return_book(transaction_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Transaction not found")
 
     if transaction.return_date is not None:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="This book has already been returned"
-        )
+        raise HTTPException(status_code=400, detail="Book already returned")
 
-    # Mark as returned and restore quantity
     transaction.return_date = datetime.date.today()
     transaction.book.quantity += 1
-
     db.commit()
     db.refresh(transaction)
 
@@ -110,8 +96,11 @@ def return_book(transaction_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/", response_model=List[schemas.TransactionResponse])
-def get_active_transactions(db: Session = Depends(get_db)):
-    """Return all transactions where the book hasn't been returned yet."""
+def get_active_transactions(
+    db: Session = Depends(get_db),
+    _user=Depends(get_current_user)
+):
+    """Return all unreturned transactions. Requires login."""
     transactions = db.query(models.Transaction).filter(
         models.Transaction.return_date == None
     ).all()

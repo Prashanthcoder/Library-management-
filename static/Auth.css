@@ -1,0 +1,512 @@
+/*
+  static/auth.css
+  ---------------
+  STYLES FOR LOGIN AND SIGNUP PAGES  (NEW FILE)
+
+  PASTE LOCATION: library_system/static/auth.css  (create this new file)
+*/
+
+.auth-body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    padding: 1.5rem;
+}
+
+.auth-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2.5rem 2.25rem;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .2);
+}
+
+.auth-logo {
+    font-size: 2.8rem;
+    text-align: center;
+    margin-bottom: .75rem;
+}
+
+.auth-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    text-align: center;
+    color: #1e293b;
+    margin-bottom: .25rem;
+}
+
+.auth-sub {
+    text-align: center;
+    color: #64748b;
+    font-size: .9rem;
+    margin-bottom: 1.75rem;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Eye toggle wrapper */
+.input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrap input {
+    padding-right: 2.5rem;
+}
+
+.eye-btn {
+    position: absolute;
+    right: .6rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: .2rem;
+    line-height: 1;
+    color: #64748b;
+}
+
+/* Alert banner */
+.auth-alert {
+    border-radius: 8px;
+    padding: .7rem 1rem;
+    font-size: .88rem;
+    font-weight: 500;
+    margin-bottom: .5rem;
+}
+
+.hidden {
+    display: none;
+}
+
+.auth-alert-error {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.auth-alert-success {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 1.25rem;
+    font-size: .88rem;
+    color: #64748b;
+}
+
+.auth-footer a {
+    color: #4f46e5;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Divider */
+.auth-divider {
+    text-align: center;
+    color: #94a3b8;
+    font-size: .8rem;
+    margin: .5rem 0;
+    position: relative;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background: #e2e8f0;
+}
+
+.auth-divider::before {
+    left: 0;
+}
+
+.auth-divider::after {
+    right: 0;
+}
+
+/* Small helper text under labels */
+.field-hint {
+    font-size: .75rem;
+    color: #94a3b8;
+    font-weight: 400;
+    margin-top: .2rem;
+}
+
+/* ── Claude-style animated logo ── */
+.auth-logo {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    margin: 0 auto 1.1rem;
+    background: conic-gradient(from 180deg at 50% 50%,
+            #f97316 0deg,
+            #ec4899 72deg,
+            #8b5cf6 144deg,
+            #3b82f6 216deg,
+            #10b981 288deg,
+            #f97316 360deg);
+    animation: spin-logo 4s linear infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 24px rgba(139, 92, 246, 0.4);
+    font-size: 0;
+    /* hide emoji */
+    position: relative;
+}
+
+/* White inner circle to create the ring effect like Claude's logo */
+.auth-logo::after {
+    content: '';
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: white;
+    position: absolute;
+}
+
+@keyframes spin-logo {
+    from {
+        filter: hue-rotate(0deg);
+    }
+
+    to {
+        filter: hue-rotate(360deg);
+    }
+}
+
+/*
+  static/auth.css
+  ---------------
+  STYLES FOR LOGIN AND SIGNUP PAGES  (NEW FILE)
+
+  PASTE LOCATION: library_system/static/auth.css  (create this new file)
+*/
+
+.auth-body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    padding: 1.5rem;
+}
+
+.auth-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2.5rem 2.25rem;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .2);
+}
+
+.auth-logo {
+    font-size: 2.8rem;
+    text-align: center;
+    margin-bottom: .75rem;
+}
+
+.auth-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    text-align: center;
+    color: #1e293b;
+    margin-bottom: .25rem;
+}
+
+.auth-sub {
+    text-align: center;
+    color: #64748b;
+    font-size: .9rem;
+    margin-bottom: 1.75rem;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Eye toggle wrapper */
+.input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrap input {
+    padding-right: 2.5rem;
+}
+
+.eye-btn {
+    position: absolute;
+    right: .6rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: .2rem;
+    line-height: 1;
+    color: #64748b;
+}
+
+/* Alert banner */
+.auth-alert {
+    border-radius: 8px;
+    padding: .7rem 1rem;
+    font-size: .88rem;
+    font-weight: 500;
+    margin-bottom: .5rem;
+}
+
+.hidden {
+    display: none;
+}
+
+.auth-alert-error {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.auth-alert-success {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 1.25rem;
+    font-size: .88rem;
+    color: #64748b;
+}
+
+.auth-footer a {
+    color: #4f46e5;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Divider */
+.auth-divider {
+    text-align: center;
+    color: #94a3b8;
+    font-size: .8rem;
+    margin: .5rem 0;
+    position: relative;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background: #e2e8f0;
+}
+
+.auth-divider::before {
+    left: 0;
+}
+
+.auth-divider::after {
+    right: 0;
+}
+
+/* Small helper text under labels */
+.field-hint {
+    font-size: .75rem;
+    color: #94a3b8;
+    font-weight: 400;
+    margin-top: .2rem;
+}
+
+/* ── Claude-style animated logo ── */
+.auth-logo {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    margin: 0 auto 1.1rem;
+    background: conic-gradient(from 180deg at 50% 50%,
+            #f97316 0deg,
+            #ec4899 72deg,
+            #8b5cf6 144deg,
+            #3b82f6 216deg,
+            #10b981 288deg,
+            #f97316 360deg);
+    animation: spin-logo 4s linear infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 24px rgba(139, 92, 246, 0.4);
+    font-size: 0;
+    /* hide emoji */
+    position: relative;
+}
+
+/* White inner circle to create the ring effect like Claude's logo */
+.auth-logo::after {
+    content: '';
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: white;
+    position: absolute;
+}
+
+@keyframes spin-logo {
+    from {
+        filter: hue-rotate(0deg);
+    }
+
+    to {
+        filter: hue-rotate(360deg);
+    }
+}
+
+
+/* ════════════════════════════════════════
+   LOGIN SUCCESS OVERLAY
+   ════════════════════════════════════════ */
+
+#success-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .35s ease;
+    z-index: 999;
+}
+
+#success-overlay.visible {
+    opacity: 1;
+    pointer-events: all;
+}
+
+#success-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .75rem;
+    animation: popIn .45s cubic-bezier(.34, 1.56, .64, 1) both;
+    animation-delay: .25s;
+}
+
+/* Spinning gradient ring behind the checkmark */
+#success-ring {
+    position: absolute;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, .9) 100%);
+    animation: spin-ring 1s linear infinite;
+}
+
+/* SVG checkmark */
+#check-svg {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    z-index: 1;
+}
+
+.check-circle {
+    stroke: rgba(255, 255, 255, .35);
+    stroke-width: 2;
+}
+
+.check-tick {
+    stroke: #fff;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 40;
+    stroke-dashoffset: 40;
+    animation: draw-tick .45s ease forwards;
+    animation-delay: .5s;
+}
+
+#success-label {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -.3px;
+    margin-top: .5rem;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeUp .4s ease forwards;
+    animation-delay: .75s;
+}
+
+#success-sub {
+    color: rgba(255, 255, 255, .7);
+    font-size: .9rem;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: fadeUp .4s ease forwards;
+    animation-delay: .95s;
+}
+
+/* ── Keyframes ── */
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: scale(.6);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes spin-ring {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes draw-tick {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
